@@ -1,5 +1,6 @@
 ﻿using ServerFramework.RedisService.Models;
 using StackExchange.Redis;
+#pragma warning disable CS0618 // Type or member is obsolete
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
@@ -57,16 +58,7 @@ public class RedisServiceBaseAzure : IDisposable
         {
             var subscriber = db.Multiplexer.GetSubscriber();
 
-            /*------------------------------------------------------------------------------------
-            [smbaek / 2024.07.18]
-            [Comment] : 형식 또는 멤버는 사용되지 않습니다. (단순 경고 제거)
-            ------------------------------------------------------------------------------------*/
-            #pragma warning disable CS0618
             await subscriber.SubscribeAsync(_redisConnectionInfo.Channel, handler);
-            #pragma warning restore CS0618
-            /*------------------------------------------------------------------------------------
-            [smbaek] Comment end
-            ------------------------------------------------------------------------------------*/
             return true;
 
         });
