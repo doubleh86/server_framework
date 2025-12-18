@@ -5,13 +5,13 @@ using ServerFramework.CommonUtils.Helper;
 namespace ServerFramework.GrpcServices;
 
 /// <summary>
-/// 
+/// GRpc 서버 베이스
 /// </summary>
 /// <param name="loggerService"></param>
 /// <param name="serverName">자신의 서버이름</param>
 /// <param name="serverAddress">구독할 서버 주소</param>
 /// <typeparam name="TClientBase"></typeparam>
-public abstract class GrpcServiceBase<TClientBase>(LoggerService loggerService, string serverName, string serverAddress)
+public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, string serverName, string serverAddress)
     where TClientBase : ClientBase
 {
     private GrpcChannel _channel;
