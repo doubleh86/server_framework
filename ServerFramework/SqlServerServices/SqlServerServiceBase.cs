@@ -36,11 +36,20 @@ public class SqlServerServiceBase : DbContext, ISqlServerContext
 
     public void ConnectDatabase()
     {
-        var connString = $"server={_serverInfo.Ip},{_serverInfo.Port};uid={_serverInfo.UserId};" +
-                         $"pwd={_serverInfo.Password};database={_serverInfo.DatabaseName};Encrypt=false";
+        if (_serverInfo.IsMySql == false)
+        {
+            var connString = $"server={_serverInfo.Ip},{_serverInfo.Port};uid={_serverInfo.UserId};" +
+                             $"pwd={_serverInfo.Password};database={_serverInfo.DatabaseName};Encrypt=false";
 
-        _optionsBuilder.UseSqlServer(connString);
+            _optionsBuilder.UseSqlServer(connString);
+            return;
+        }
         
+        var mySqlConnString = $"Server={_serverInfo.Ip};Port={_serverInfo.Port};Database={_serverInfo.DatabaseName};" +
+                         $"Uid={_serverInfo.UserId};Pwd={_serverInfo.Password};";
+
+        var serverVersion = ServerVersion.AutoDetect(mySqlConnString);
+        _optionsBuilder.UseMySql(mySqlConnString, serverVersion);
     }
     
     
