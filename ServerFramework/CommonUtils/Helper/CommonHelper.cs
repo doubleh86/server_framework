@@ -18,19 +18,31 @@ public static class CommonHelper
     
     public static List<T> Shuffle<T>(List<T> listData)
     {
-        var rnd = new Random();
-        return listData.OrderBy(a => rnd.Next()).ToList();
-    }
+        var list = new List<T>(listData);
+        for (var i = list.Count - 1; i > 0; i--)
+        {
+            var swapIndex = Random.Shared.Next(i + 1);
+            (list[i], list[swapIndex]) = (list[swapIndex], list[i]);
+        }
 
+        return list;
+    }
+    
+    
     public static (int, int, int) ParseStringTimeToInt(string timeString)
     {
-        var timeInt = int.Parse(timeString);
+        if (!int.TryParse(timeString, out var timeInt))
+            throw new FormatException("Invalid time format.");
+        
         if(timeInt <= 2359)
             timeInt *= 100;
         
         var hours = timeInt / 10000;
         var minutes = (timeInt / 100) % 100;
         var seconds = timeInt % 100;
+        
+        if (hours is < 0 or > 23 || minutes is < 0 or > 59 || seconds is < 0 or > 59)
+            throw new ArgumentOutOfRangeException(nameof(timeString), "Time value is out of range.");
         
         return (hours, minutes, seconds);
     }
