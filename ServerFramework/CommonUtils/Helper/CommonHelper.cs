@@ -7,6 +7,9 @@ public static class CommonHelper
 {
     public static int GetDbId(string accountId, int dbCount)
     {
+        if(dbCount <= 0)
+            throw new ArgumentException("dbCount must be greater than 0");
+        
         var crcCode = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(accountId));
             
         var index = (int)(crcCode % dbCount);
