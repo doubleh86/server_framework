@@ -23,14 +23,20 @@ public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, 
     protected abstract Task SubscribeToEvents(CancellationToken token);
     
     public TClientBase GrpcClient => _client;
+    protected readonly string _serverName = serverName;
+    
     public void Initialize()
     {
         _channel = GrpcChannel.ForAddress(serverAddress);
         _client = _CreateClient(_channel);
         
         _cancellationTokenSource = new CancellationTokenSource();
-        Task.Run(() => SubscribeToEvents(_cancellationTokenSource.Token));
         
-        _loggerService.Information($"Initializing {serverName} server at {serverAddress}");
+        _loggerService.Information($"Initializing {_serverName} server at {serverAddress}");
+    }
+
+    public void Start()
+    {
+        Task.Run(() => SubscribeToEvents(_cancellationTokenSource.Token));
     }
 }
