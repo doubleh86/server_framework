@@ -8,10 +8,10 @@ namespace ServerFramework.GrpcServices;
 /// GRpc 서버 베이스
 /// </summary>
 /// <param name="loggerService"></param>
-/// <param name="serverName">자신의 서버이름</param>
+/// <param name="serverId">자신의 서버이름</param>
 /// <param name="serverAddress">구독할 서버 주소</param>
 /// <typeparam name="TClientBase"></typeparam>
-public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, string serverName, string serverAddress)
+public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, string serverId, string serverAddress)
     where TClientBase : ClientBase
 {
     private GrpcChannel _channel;
@@ -21,10 +21,9 @@ public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, 
     protected readonly LoggerService _loggerService = loggerService;
     protected abstract TClientBase _CreateClient(GrpcChannel channel);
     protected abstract Task SubscribeToEvents(CancellationToken token);
-    
-    public TClientBase GrpcClient => _client;
-    protected readonly string _serverName = serverName;
-    
+
+    protected TClientBase GrpcClient => _client;
+    public readonly string ServerId = serverId;
     public void Initialize()
     {
         _channel = GrpcChannel.ForAddress(serverAddress);
@@ -32,7 +31,7 @@ public abstract class GRpcServiceBase<TClientBase>(LoggerService loggerService, 
         
         _cancellationTokenSource = new CancellationTokenSource();
         
-        _loggerService.Information($"Initializing {_serverName} server at {serverAddress}");
+        _loggerService.Information($"Initializing {ServerId} server at {serverAddress}");
     }
 
     public void Start()
